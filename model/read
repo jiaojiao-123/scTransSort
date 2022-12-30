@@ -1,0 +1,80 @@
+import numpy as np
+import pandas as pd
+import math
+from tensorflow.keras.utils import to_categorical
+from sklearn.decomposition import PCA
+
+def readdata():
+    data = pd.read_csv(name[0], header=None, low_memory=False)
+    data = np.array(data)
+    cellname = np.array(data[0])
+    cellname = cellname[1:]
+    data = data[1:]
+    genename = []
+    for i in range(len(data)):
+        genename.append(data[i][0])
+    genename = np.array(genename)
+
+    newdata = []
+    for i in range(len(data)):
+        newdata.append(data[i][1:])
+    newdata= np.array(newdata).transpose()
+    newdata = newdata.astype(np.float)
+    return newdata,cellname,genename
+feature,cellname,genename = readdata()
+
+def readtype():
+    type = pd.read_csv(name[1])
+    type = type['Cell_type']
+    type  = np.array(type)
+    return type
+type = readtype()
+
+def typenum(type = type):
+    type_short = []
+    for i in type:
+        if i not in type_short:
+            type_short.append(i)
+    type_short = np.array(type_short)
+    type_num = type_short.shape[0]
+    return type_num,type_short
+type_num,type_short = typenum()
+
+def changetype(type = type,type_num = type_num,type_short= type_short):
+    int_type = []
+    for i in range(len(type)):
+        for j in range(len(type_short)):
+            if type[i] == type_short[j]:
+                int_type.append(j)
+    int_type = np.array(int_type)
+    return int_type
+type_int = changetype()
+
+def changefeature(feature = feature,genename = genename):
+    sequence_length = math.sqrt(genename.shape[0])
+    sequence_length = int(sequence_length) + 1
+    feature_sequence = []
+    for i in range(1, len(feature) + 1):
+        temp = list(feature[i - 1])
+        temp = temp + [0] * ((sequence_length * sequence_length) - len(feature[i - 1]))
+        temp = np.array(temp)
+        temp = temp.reshape((sequence_length, sequence_length, 1))
+        feature_sequence.append(temp)
+    feature_sequence = np.array(feature_sequence)
+    return feature_sequence,sequence_length
+feature_sequence,sequence_length = changefeature()
+
+feature_sequence_3 = []
+for i in range(len(feature_sequence)):
+    temp3 = []
+    for j in range(len(feature_sequence[i])):
+        temp2 = []
+        for z in range(len(feature_sequence[i][j])):
+            temp1 = []
+            temp1.append(feature_sequence[i][j][z][0])
+            temp1.append(feature_sequence[i][j][z][0])
+            temp1.append(feature_sequence[i][j][z][0])
+            temp2.append(temp1)
+        temp3.append(temp2)
+    feature_sequence_3.append(temp3)
+feature_sequence_3 = np.array(feature_sequence_3)
