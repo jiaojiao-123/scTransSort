@@ -59,8 +59,8 @@ def main():
         return new_lr
 
     # using keras low level api for training
-    loss_object = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)  # 改loss: tf.keras.losses.CategoricalCrossentropy()
-    optimizer = tf.keras.optimizers.SGD(learning_rate=initial_lr, momentum=0.9)  #optimizer=tf.keras.optimizers.SGD(lr=0.005)  momentum：加速相关方向的梯度下降并抑制振荡。默认为 0，即普通梯度下降。
+    loss_object = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True) 
+    optimizer = tf.keras.optimizers.SGD(learning_rate=initial_lr, momentum=0.9)  
 
     train_loss = tf.keras.metrics.Mean(name='train_loss')
     train_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='train_accuracy')
